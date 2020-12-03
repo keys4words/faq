@@ -5,17 +5,6 @@
 <title>Users</title>
 {% endblock %}
 
-{% block menu %}
-<li class="active"><a href="{{ url_for('home') }}">Home</a></li>
-<li><a href="{{ url_for('login') }}">Login</a></li>
-<li><a href="{{ url_for('register') }}">Register</a></li>
-<li><a href="{{ url_for('ask') }}">Ask Question</a></li>
-<li><a href="{{ url_for('answer') }}">Answer Questions</a></li>
-<li><a href="{{ url_for('users') }}">User Setup</a></li>
-<li><a href="#">Logout</a></li>
-{% endblock %}
-
-
 {% block content %}
 
 <div class="page-header">
@@ -25,15 +14,11 @@
 <div class="row">
   <div class="col-lg-12">
     <div class="list-group">
-      <a href="#" class="list-group-item active">
-        <h4 class="list-group-item-heading">Admin</h4>
+      {% for el in users %}
+      <a href="{{ url_for('promote', user_id=el['id']) }}" class="list-group-item {% if el['expert'] == 1 %} active {% endif %}">
+        <h4 class="list-group-item-heading">{{ el['name'] }}</h4>
       </a>
-      <a href="#" class="list-group-item">
-        <h4 class="list-group-item-heading">Herbert</h4>
-      </a>
-      <a href="#" class="list-group-item active">
-        <h4 class="list-group-item-heading">Anthony</h4>
-      </a>
+      {% endfor %}
     </div>
   </div><!-- /.col-lg-12 -->
 </div>
