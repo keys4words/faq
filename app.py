@@ -27,10 +27,8 @@ def get_current_user():
 
 @app.route('/')
 def home():
-    # user = None
-    # if 'user' in session:
-    #     user = session['user']
     user = get_current_user()
+
     db = get_db()
     questions_cur = db.execute('''select questions.id
                                         as question_id
@@ -57,6 +55,12 @@ def register():
 
     if request.method == 'POST':
         db = get_db()
+        existing_user_cur = db.execute('select id from users where name = ?', [request.form['inputName']])
+        existing_user = existing_user_cur.fetchone()
+
+        if existing_user:
+            return render_template('register.html', user=user, error='User already exists!')
+
         hashed_pass = generate_password_hash(request.form["inputPassword"], method='sha256')
         db.execute('insert into users(name, password, expert, admin) values(?, ?, ?, ?)', [request.form["inputName"], hashed_pass, '0', '0'])
         db.commit()
@@ -113,6 +117,10 @@ def question(question_id):
 @app.route('/answer/<question_id>', methods=['GET', 'POST'])
 def answer(question_id):
     user = get_current_user()
+
+    if not user:
+        return redirect(url_for('login'))
+
     db = get_db()
     if request.method == 'POST':
         db.execute('update questions set answer_text = ? where id = ?', [request.form['answer'], question_id])
@@ -126,6 +134,10 @@ def answer(question_id):
 @app.route('/ask', methods=['POST', 'GET'])
 def ask():
     user = get_current_user()
+
+    if not user:
+        return redirect(url_for('login'))
+
     db = get_db()
 
     if request.method == 'POST':
@@ -144,6 +156,10 @@ def ask():
 @app.route('/unanswered')
 def unanswered():
     user = get_current_user()
+
+    if not user:
+        return redirect(url_for('login'))
+        
     db = get_db()
     questions_cur = db.execute('''select questions.id
                                         ,questions.question_text
@@ -160,6 +176,10 @@ def unanswered():
 @app.route('/users')
 def users():
     user = get_current_user()
+
+    if not user:
+        return redirect(url_for('login'))
+
     db = get_db()
     users_cur = db.execute('select id, name, expert, admin from users')
     users_res = users_cur.fetchall()
@@ -175,6 +195,11 @@ def logout():
 
 @app.route('/promote/<int:user_id>')
 def promote(user_id):
+    user = get_current_user()
+
+    if not user:
+        return redirect(url_for('login'))
+
     db = get_db()
     db.execute('update users set expert = 1 where id = ?', [user_id])
     db.commit()
