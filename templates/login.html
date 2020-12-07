@@ -4,6 +4,10 @@
 <title>Login</title>
 {% endblock %}
 
+{% block menu %}
+  {{ show_links(user) }}
+{% endblock %}
+
 {% block content %}
 
 <div class="page-header">
@@ -15,6 +19,9 @@
       <form class="form-horizontal" method="POST" action="{{ url_for('login') }}">
         <fieldset>
           <div class="form-group">
+            {% if error %}
+              <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
             <label for="inputName" class="col-lg-2 control-label">Name</label>
             <div class="col-lg-10">
               <input type="text" class="form-control" id="inputName" name="inputName" placeholder="Name">
