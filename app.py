@@ -6,7 +6,8 @@ import os
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.urandom(24)
+# app.config['SECRET_KEY'] = os.urandom(24)
+app.config['SECRET_KEY'] = b'G\x88-\x01a\xde\xd6T\xe1\x1drx\x08^k\xd0\x02\x89B\xba\xd9r\x0f*'
 
 
 ################
