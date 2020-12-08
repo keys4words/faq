@@ -19,7 +19,7 @@
   <div class="col-lg-12">
     <div class="list-group">
       {% for el in users %}
-      <a href="{{ url_for('promote', user_id=el['id']) }}" class="list-group-item {% if el['expert'] == 1 %} active {% endif %}">
+      <a href="{{ url_for('promote', user_id=el['id']) }}" class="list-group-item {% if el['expert'] %} active {% endif %}">
         <h4 class="list-group-item-heading">{{ el['name'] }}</h4>
       </a>
       {% endfor %}
